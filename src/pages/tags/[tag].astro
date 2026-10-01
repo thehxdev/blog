@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter((post) => post.data.tags?.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+
+function formatDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+---
+
+<BaseLayout title={`#${tag} | Hossein`} description={`Posts tagged with #${tag}`}>
+  <section class="intro">
+    <h1>#{tag}</h1>
+    <p>
+      {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged with #{tag}.
+    </p>
+  </section>
+
+  <section>
+    <ul class="post-list">
+      {
+        posts.map((post) => (
+          <li class="post-item">
+            <a href={`/posts/${post.id}`}>{post.data.title}</a>
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <div class="back-nav">
+    <a href="/">&larr; Back to all posts</a>
+  </div>
+</BaseLayout>

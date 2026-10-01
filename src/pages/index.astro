@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+function formatDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+---
+
+<BaseLayout title="Hossein | Personal Blog">
+  <section class="intro">
+    <h1>Hi, I'm Hossein.</h1>
+    <p>
+      Software engineer writing about simple systems, minimal web design, and personal observations.
+    </p>
+  </section>
+
+  <section>
+    <h2>Writing</h2>
+    <ul class="post-list">
+      {
+        posts.map((post) => (
+          <li class="post-item">
+            <a href={`/posts/${post.id}`}>{post.data.title}</a>
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
