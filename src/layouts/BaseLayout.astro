@@ -12,6 +12,9 @@ const {
 } = Astro.props;
 
 const currentYear = new Date().getFullYear();
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <!doctype html>
@@ -20,15 +23,15 @@ const currentYear = new Date().getFullYear();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <title>{title}</title>
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="site-title">Hossein.</a>
+      <a href={base} class="site-title">Hossein.</a>
       <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
+        <a href={base}>Home</a>
+        <a href={`${base}about`}>About</a>
       </nav>
     </header>
 

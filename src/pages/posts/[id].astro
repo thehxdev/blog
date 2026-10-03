@@ -17,6 +17,10 @@ const { Content } = await render(post);
 function formatDate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseLayout title={`${post.data.title} | Hossein`} description={post.data.description}>
@@ -31,7 +35,7 @@ function formatDate(date: Date) {
           post.data.tags && post.data.tags.length > 0 && (
             <div class="post-tags">
               {post.data.tags.map((tag: string) => (
-                <a href={`/tags/${tag}`} class="tag">#{tag}</a>
+                <a href={`${base}tags/${tag}`} class="tag">#{tag}</a>
               ))}
             </div>
           )
@@ -54,7 +58,7 @@ function formatDate(date: Date) {
     </div>
 
     <div class="back-nav">
-      <a href="/">&larr; Back to all posts</a>
+      <a href={base}>&larr; Back to all posts</a>
     </div>
   </article>
 </BaseLayout>
